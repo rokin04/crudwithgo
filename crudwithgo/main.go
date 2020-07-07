@@ -100,7 +100,7 @@ func main() {
 	r := mux.NewRouter()
 
 	// Mock data
-	users = append(users, User{ID: 1, Name: "Rakesh", Birthday: time.Now().Format("01-01-2006"), Onboarded: time.Now().Format("01-01-2005"), IsActive: true})
+	users = append(users, User{ID: 1, Name: "Karthik", Birthday: time.Now().Format("01-01-2006"), Onboarded: time.Now().Format("01-01-2005"), IsActive: true})
 	users = append(users, User{ID: 2, Name: "Rokin", Birthday: time.Now().Format("01-01-2012"), Onboarded: time.Now().Format("01-01-2015"), IsActive: false})
 
 
