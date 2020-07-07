@@ -21,7 +21,7 @@ type User struct {
 }
 
 // Mock data
-var Users []User
+var users = []User
 // Mock data
 users = append(users, User{ID: 1, Name: "Karthik", Birthday: time.Now().Format("01-01-2006"), Onboarded: time.Now().Format("01-01-2005"), IsActive: true})
 users = append(users, User{ID: 2, Name: "Rokin", Birthday: time.Now().Format("01-01-2012"), Onboarded: time.Now().Format("01-01-2015"), IsActive: false})
@@ -35,7 +35,7 @@ func getUsers(w http.ResponseWriter, r *http.Request) {
 
 // Get user By ID
 
-func getUser(w http.ResponseWriter, r *http.Request) {
+func GetUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r) // set params
 	i, _ := strconv.Atoi(params["id"])
@@ -52,7 +52,7 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 
 // Create User
 
-func createUser(w http.ResponseWriter, r *http.Request) {
+func CreateUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var user User
 	_ = json.NewDecoder(r.Body).Decode(&user)
