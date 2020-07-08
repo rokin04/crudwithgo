@@ -4,7 +4,6 @@ import (
 	// "encoding/json"
 	"encoding/json"
 	"fmt"
-	"log"
 	"math/rand"
 	"net/http"
 	"strconv"
@@ -21,14 +20,15 @@ type User struct {
 }
 
 // Mock data
-var users = []User
-// Mock data
-users = append(users, User{ID: 1, Name: "Karthik", Birthday: time.Now().Format("01-01-2006"), Onboarded: time.Now().Format("01-01-2005"), IsActive: true})
-users = append(users, User{ID: 2, Name: "Rokin", Birthday: time.Now().Format("01-01-2012"), Onboarded: time.Now().Format("01-01-2015"), IsActive: false})
+var users = []User{
+	User { ID: 1, Name: "Karthik", Birthday: time.Now().Format("01-01-2006"), Onboarded: time.Now().Format("01-01-2005"), IsActive: true, },
+	User {ID: 2, Name: "Rokin1", Birthday: time.Now().Format("01-01-2012"), Onboarded: time.Now().Format("01-01-2015"), IsActive: false,},
+}
+
 
 // GET all users
 
-func getUsers(w http.ResponseWriter, r *http.Request) {
+func GetUsers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(users)
 }
