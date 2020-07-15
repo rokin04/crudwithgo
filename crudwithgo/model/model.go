@@ -1,7 +1,6 @@
 package model
 
 import (
-	// "encoding/json"
 	"encoding/json"
 	"fmt"
 	"math/rand"
