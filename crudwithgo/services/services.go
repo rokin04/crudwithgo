@@ -5,7 +5,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func Services(r *mux.Router){
+func Services(r *mux.Router) *mux.Router {
+	
 	// Endpoints
 
 	r.HandleFunc("/api/users", model.GetUsers).Methods("GET")
@@ -13,4 +14,6 @@ func Services(r *mux.Router){
 	r.HandleFunc("/api/users", model.CreateUser).Methods("POST")
 	r.HandleFunc("/api/users/{id}", model.UpdateUser).Methods("PUT")
 	r.HandleFunc("/api/users/{id}", model.DeleteUser).Methods("DELETE")
+
+	return r
 }

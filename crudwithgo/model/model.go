@@ -20,25 +20,24 @@ type User struct {
 
 // Mock data
 var users = []User{
-	User { ID: 1, Name: "Karthik", Birthday: time.Now().Format("01-01-2006"), Onboarded: time.Now().Format("01-01-2005"), IsActive: true, },
-	User {ID: 2, Name: "Rokin1", Birthday: time.Now().Format("01-01-2012"), Onboarded: time.Now().Format("01-01-2015"), IsActive: false,},
+	User { ID: 1, Name: "Karthik", Birthday: time.Now().Format("01-01-2006"), Onboarded: time.Now().Format("01-01-2005"), IsActive: true },
+	User {ID: 2, Name: "Rokin1", Birthday: time.Now().Format("01-01-2012"), Onboarded: time.Now().Format("01-01-2015"), IsActive: false},
 }
 
 
-// GET all users
 
-func GetUsers(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(users)
-}
+// GetUsers details
+	func GetUsers(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(users)
+	}
 
-// Get user By ID
-
+// GetUser By ID
 func GetUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r) // set params
 	i, _ := strconv.Atoi(params["id"])
-	fmt.Println(i)
+	fmt.Println("id", i, params);
 	for _, item := range users {
 		fmt.Println(item.ID)
 		if item.ID == i {
@@ -49,8 +48,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(&User{})
 }
 
-// Create User
-
+// CreateUser adds new user
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var user User
@@ -60,8 +58,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(user)
 }
 
-// Update User
-
+// UpdateUser updates existing user
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
@@ -79,8 +76,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(users)
 }
 
-// Delete User
-
+// DeleteUser deletes user
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
