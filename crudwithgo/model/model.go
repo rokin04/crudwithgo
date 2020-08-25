@@ -37,7 +37,6 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r) // set params
 	i, _ := strconv.Atoi(params["id"])
-	fmt.Println("id", i, params);
 	for _, item := range users {
 		fmt.Println(item.ID)
 		if item.ID == i {
@@ -63,14 +62,13 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	id, _ := strconv.Atoi(params["id"])
+	var user User
 	for index, item := range users {
 		if item.ID == id {
 			users = append(users[:index], users[index+1:]...)
-			var user User
 			_ = json.NewDecoder(r.Body).Decode(&user)
 			user.ID = id
 			users = append(users, user)
-			json.NewEncoder(w).Encode(user)
 		}
 	}
 	json.NewEncoder(w).Encode(users)

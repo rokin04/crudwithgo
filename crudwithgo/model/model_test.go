@@ -1,58 +1,35 @@
 package model
 
 import (
+	"bytes"
 	"encoding/json"
-	// "fmt"
-
-	// "io"
-	// "io"
 	"io/ioutil"
-	// "net/http"
-	// "net/http"
 	"net/http/httptest"
 	"testing"
-	// "time"
-
-	// "github.com/gorilla/mux"
 	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
 )
 
-// func TestGetUser(t *testing.T) {
-// 	router := mux.NewRouter() //initialise the router
-// 	testServer := httptest.NewServer(router) //setup the testing server
-// 	res, err := http.Get(fmt.Sprintf("http://localhost:8080/api/users/1"))
-// 	body, _ := ioutil.ReadAll(res.Body)
-// 	fmt.Println(res.StatusCode, testServer.URL)
-// 	if err != nil {
-// 		t.Fatalf("could not send GET req")
-// 	} else {
+func TestGetUsers(t *testing.T) {
 
-// 	}
-// 	if res.StatusCode == 200 {
-// 		fmt.Println("got resp", string(body))
-// 	} else {
-// 		t.Fatalf("got status error")
-// 	}
-// 	type Mock struct {
-// 		ID int  `json:id`
-// 		Name string  `json:name`
-// 		Birthday string  `json:birthday`
-// 		Onboarded string  `json:onboarded`
-// 		IsActive bool  `json:isactive`
-// 	}
-// 	data := []Mock{{ ID: 1, Name: "Karthik", Birthday: time.Now().Format("01-01-2006"), Onboarded: time.Now().Format("01-01-2005"), IsActive: true}}
-// 	assert.Equal(t, data, string(body))
-// }
+	req := httptest.NewRequest("GET", "http://localhost:8080/api/users", nil)
+	w := httptest.NewRecorder()
+	GetUsers(w, req);
 
-func TestGetuser(t *testing.T) {
-	type Mock struct {
-		ID int  `json:id`
-		Name string  `json:name`
-		Birthday string  `json:birthday`
-		Onboarded string  `json:onboarded`
-		IsActive bool  `json:isactive`
+	resp := w.Result()
+	body, _ := ioutil.ReadAll(resp.Body)
+	var userMock []User
+	json.Unmarshal(body, &userMock)
+
+	if 200 != resp.StatusCode {
+		t.Fatal("status code not good")
 	}
+	if len(userMock) == 0 {
+		t.Fatal("No users found")
+	}
+}
+
+func TestGetUser(t *testing.T) {
 
 	params := map[string]string {
 		"id": "1",
@@ -65,11 +42,97 @@ func TestGetuser(t *testing.T) {
 
 	resp := w.Result()
 	body, _ := ioutil.ReadAll(resp.Body)
-	userMock := Mock{}
+	var userMock User
 	json.Unmarshal(body, &userMock)
 
 	if 200 != resp.StatusCode {
 		t.Fatal("status code not good")
 	}
 	assert.Equal(t, 1 , userMock.ID)
+}
+
+func TestCreateUser(t *testing.T) {
+
+	payload := []byte(
+		`{ 
+			"Name": "newUser", 
+			"Birthday": "01-01-2006", 
+			"Onboarded": "01-01-2005", 
+			"IsActive": true 
+		}`,
+	)
+	newReq := httptest.NewRequest("POST", "http://localhost:8080/api/users", bytes.NewBuffer(payload))
+	w := httptest.NewRecorder()
+	CreateUser(w, newReq);
+
+	resp := w.Result()
+	body, _ := ioutil.ReadAll(resp.Body)
+	var userMock User
+	json.Unmarshal(body, &userMock)
+
+	if 200 != resp.StatusCode {
+		t.Fatal("status code not good")
+	}
+	assert.Equal(t, "newUser", userMock.Name)
+}
+
+func TestUpdateUser(t *testing.T) {
+
+	payload := []byte(
+		`{ 
+			"Name": "updatedUser", 
+			"Birthday": "01-01-2006", 
+			"Onboarded": "01-01-2005", 
+			"IsActive": true 
+		}`,
+	)
+
+	params := map[string]string {
+		"id": "1",
+	}
+
+	newReq := httptest.NewRequest("PUT", "http://localhost:8080/api/users", bytes.NewBuffer(payload))
+	req := mux.SetURLVars(newReq, params)
+	w := httptest.NewRecorder()
+	UpdateUser(w, req);
+
+	resp := w.Result()
+	body, _ := ioutil.ReadAll(resp.Body)
+	var userMock []User
+	json.Unmarshal(body, &userMock)
+	if 200 != resp.StatusCode {
+		t.Fatal("status code not good")
+	}
+	for _, user := range userMock {
+		if user.ID == 1 {
+			assert.Equal(t, "updatedUser" , user.Name)
+		}
+	}
+}
+
+func TestDeleteUser(t *testing.T) {
+
+	params := map[string]string {
+		"id": "1",
+	}
+
+	newReq := httptest.NewRequest("DELETE", "http://localhost:8080/api/users", nil)
+	req := mux.SetURLVars(newReq, params)
+	w := httptest.NewRecorder()
+	DeleteUser(w, req);
+
+	resp := w.Result()
+	body, _ := ioutil.ReadAll(resp.Body)
+	var userMock []User
+	json.Unmarshal(body, &userMock)
+	if 200 != resp.StatusCode {
+		t.Fatal("status code not good")
+	}
+	for _, user := range userMock {
+		if user.ID == 1 {
+			t.Fatal("User still exists")
+			break
+		}
+	}
+	assert.True(t, true)
 }
